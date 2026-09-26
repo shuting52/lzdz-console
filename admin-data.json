@@ -15639,9 +15639,9 @@
     ]
   },
   "console": {
-    "version": "1.0.3",
-    "code": 28,
-    "apkUrl": "https://raw.githubusercontent.com/shuting52/2026-9-21landezhaole/main/dist/console/console-apk-v1.0.3-1790349847.apk"
+    "version": "1.0.4",
+    "code": 29,
+    "apkUrl": "https://raw.githubusercontent.com/shuting52/lzdz-console/main/dist/console/console-apk-v1.0.4-1790353813.apk"
   },
   "ipMonitor": {
     "enabled": false,
