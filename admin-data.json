@@ -1,16 +1,17 @@
 {
   "version": {
-    "code": 75,
-    "name": "1.8.6",
+    "code": 76,
+    "name": "1.8.7",
     "changelog": [
-      "? v1.8.6：恢复全部站点与软件库，1161+ 不重复站点完整在线",
-      "⚡ 软件库恢复：红果短剧/番茄短剧/河马剧场/NetShort 已重新上架",
-      "? Skill 与联系作者版块保持完整（微信/QQ/支付宝/官方群）",
-      "? 开屏倒计时动画默认 5 秒，进入更快更流畅"
+      "? v1.8.7：控制台与本体100%融合，云端增删软件/Skill/工具箱工具实时同步",
+      "⚡ 开屏倒计时流畅度优化：帧级校准，读秒不再卡顿",
+      "? 背景媒体全局应用：设置等白色界面自动转透明磨砂，图片/视频背景全方位呈现",
+      "? Skill 视频预览修复：缓存失败自动回退远程直连，子分类左右滑动切换",
+      "? 软件版块三列一排 + 自动归类分类 + 软件 icon 自动识别"
     ],
     "force": false,
-    "apkUrl": "https://raw.githubusercontent.com/shuting52/2026-9-21landezhaole/main/dist/apk/landezhao-v1.8.6-1790347134.apk",
-    "apkUrlRaw": "https://raw.githubusercontent.com/shuting52/2026-9-21landezhaole/main/dist/apk/landezhao-v1.8.6-1790347134.apk"
+    "apkUrl": "https://raw.githubusercontent.com/shuting52/2026-9-21landezhaole/main/dist/apk/landezhao-v1.8.7-1790392857.apk",
+    "apkUrlRaw": "https://raw.githubusercontent.com/shuting52/2026-9-21landezhaole/main/dist/apk/landezhao-v1.8.7-1790392857.apk"
   },
   "home": {
     "categories": [
@@ -15607,12 +15608,13 @@
     "ratio": "standard"
   },
   "updateDialog": {
-    "title": "懒得找了 v1.8.6 已上线",
+    "title": "懒得找了 v1.8.7 已上线",
     "changelog": [
-      "? v1.8.6：恢复全部站点与软件库，1161+ 不重复站点完整在线",
-      "⚡ 软件库恢复：红果短剧/番茄短剧/河马剧场/NetShort 已重新上架",
-      "? Skill 与联系作者版块保持完整（微信/QQ/支付宝/官方群）",
-      "? 开屏倒计时动画默认 5 秒，进入更快更流畅"
+      "? v1.8.7：控制台与本体100%融合，云端增删软件/Skill/工具箱工具实时同步",
+      "⚡ 开屏倒计时流畅度优化：帧级校准，读秒不再卡顿",
+      "? 背景媒体全局应用：设置等白色界面自动转透明磨砂，图片/视频背景全方位呈现",
+      "? Skill 视频预览修复：缓存失败自动回退远程直连，子分类左右滑动切换",
+      "? 软件版块三列一排 + 自动归类分类 + 软件 icon 自动识别"
     ],
     "confirmText": "立即更新",
     "cancelText": "稍后再说",
@@ -15639,12 +15641,38 @@
     ]
   },
   "console": {
-    "version": "1.0.5",
-    "code": 30,
-    "apkUrl": "https://raw.githubusercontent.com/shuting52/2026-9-21landezhaole/main/dist/console/console-apk-v1.0.5-1790385730.apk"
+    "version": "1.0.6",
+    "code": 31,
+    "apkUrl": "https://raw.githubusercontent.com/shuting52/2026-9-21landezhaole/main/dist/console/console-apk-v1.0.6-1790392055.apk"
   },
   "ipMonitor": {
     "enabled": false,
     "url": "https://myip.ipip.net/"
-  }
+  },
+  "tools": [
+    {
+      "id": "tk_urltest",
+      "name": "站长工具",
+      "desc": "在线工具箱：URL编码、MD5、二维码等",
+      "url": "https://tool.chinaz.com/",
+      "icon": "🧰",
+      "badge": "常用"
+    },
+    {
+      "id": "tk_pdf",
+      "name": "PDF处理",
+      "desc": "在线 PDF 合并/压缩/转换",
+      "url": "https://smallpdf.com/cn",
+      "icon": "📄",
+      "badge": ""
+    },
+    {
+      "id": "tk_ocr",
+      "name": "文字识别",
+      "desc": "百度 OCR 在线识别图片文字",
+      "url": "https://ai.baidu.com/tech/ocr",
+      "icon": "🔍",
+      "badge": ""
+    }
+  ]
 }
