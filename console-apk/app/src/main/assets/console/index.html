@@ -290,7 +290,7 @@ const CONFIG_PATH   = "admin-data.json";
 // v1.0.12 修复：运行时优先读取原生桥回传的「真实已安装 versionCode」，
 // 只有浏览器环境取不到时才回退到该常量，彻底避免常量漏改导致更新判断失效。
 // v1.0.2：同步为 27（console-apk build.gradle.kts versionCode=27）。
-const CONSOLE_BUILTIN_VERSION = 29;
+const CONSOLE_BUILTIN_VERSION = 30;
 
 // 取当前控制台程序的真实版本号：APK 内用系统安装包 versionCode，浏览器回退内置常量
 function getLocalConsoleVersion(){
@@ -576,12 +576,13 @@ async function connect(){
     const vName = S.admin.version?.name || "1.0";
     const vCode = S.admin.version?.code || 1;
     $("connInfo").innerHTML = `<span class="status-dot loaded"></span>成功加载 admin-data.json · ${catCount}个分类 · 当前发布版本 v${vName} (code:${vCode})` + (via !== "api" ? " <span style='opacity:.65'>（" + via + " 只读，保存/发布需粘贴 Token）</span>" : "");
+    // v1.0.5：控制台自更新检查提前到 renderAll 之前——即使后续渲染有任何异常，
+    // 老版本也一定能先收到新版本推送弹窗，不再被渲染死锁挡住
+    checkConsoleUpdate();
     renderAll();
     toast("云端数据加载成功" + (via !== "api" ? "（" + via + " 只读）" : ""),"ok");
     // 异步加载仓库已有 APK
     fetchRepoApks(false);
-    // 控制台程序自更新检查（与本体软件更新完全分离，只在控制台程序内提示）
-    checkConsoleUpdate();
     if(!S.token && via !== "api"){
       setTimeout(function(){
         toast("当前为只读模式，如需保存/发布请填写 Token 后点「连接」","err");
