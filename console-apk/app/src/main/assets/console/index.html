@@ -258,6 +258,8 @@ main{padding:12px;max-width:960px;margin:0 auto}
   <div id="updatePage" class="page"></div>
   <!-- 8. APK 仓库 -->
   <div id="apkPage" class="page"></div>
+  <!-- 9. 工具箱（控制台增删云端工具） -->
+  <div id="toolboxPage" class="page"></div>
 </main>
 
 <nav id="navBar">
@@ -269,6 +271,7 @@ main{padding:12px;max-width:960px;margin:0 auto}
   <button data-page="welcomePage"><span class="ico">👋</span>欢迎</button>
   <button data-page="updatePage"><span class="ico">🔄</span>更新</button>
   <button data-page="apkPage"><span class="ico">🚀</span>APK仓库</button>
+  <button data-page="toolboxPage"><span class="ico">🧰</span>工具箱</button>
 </nav>
 
 <div class="mask" id="dlgMask" onclick="if(event.target===this)closeDlg()">
@@ -290,7 +293,7 @@ const CONFIG_PATH   = "admin-data.json";
 // v1.0.12 修复：运行时优先读取原生桥回传的「真实已安装 versionCode」，
 // 只有浏览器环境取不到时才回退到该常量，彻底避免常量漏改导致更新判断失效。
 // v1.0.2：同步为 27（console-apk build.gradle.kts versionCode=27）。
-const CONSOLE_BUILTIN_VERSION = 30;
+const CONSOLE_BUILTIN_VERSION = 31;
 
 // 取当前控制台程序的真实版本号：APK 内用系统安装包 versionCode，浏览器回退内置常量
 function getLocalConsoleVersion(){
@@ -1009,6 +1012,7 @@ function renderAll(){
   renderWelcome();
   renderUpdate();
   renderApk();
+  renderToolbox();
 }
 
 // ==========================================
@@ -2434,6 +2438,84 @@ function renderApk(){
   }
 
   $("apkPage").innerHTML = html;
+}
+
+// ==========================================
+// 9. 工具箱（v1.8.7 控制台增删云端工具，点应用后本体工具箱页实时同步）
+// ==========================================
+function renderToolbox(){
+  if(!S.admin) return;
+  const tools = S.admin.tools || [];
+  let html = `<div class="card">
+    <div class="action-banner">
+      <b>🧰 工具箱管理（云端工具）</b>
+      <span class="hint">这里管理的工具会实时同步到本体软件「工具箱」页顶部展示：工具名称/描述/图标/跳转链接。可增可删，点「应用」后本体数秒内生效；刷新本体即可看到新增工具。</span>
+    </div>
+    <div class="row">
+      <button class="btn-pri grow" onclick="toolForm()">＋ 新增云端工具</button>
+      <button class="btn-ok" onclick="applyToDevice()">✅ 应用</button>
+      <button class="btn-bump" onclick="publish(true,'工具箱云端工具更新')">? 推送并触发本体更新弹窗</button>
+    </div>
+  </div>`;
+  if(!tools.length){
+    html += `<div class="card"><div class="empty">暂无云端工具。点击上方「＋ 新增云端工具」添加（如在线工具箱、小工具页面等），保存后可增删并实时同步本体。</div></div>`;
+  } else {
+    tools.forEach((t, i) => {
+      html += `<div class="card">
+        <div class="collapse-head" onclick="toggleCollapse(this)">
+          <span class="arrow">▶</span><span class="chip">${esc(t.icon||"🔧")}</span>
+          <b>${esc(t.name)}</b><span class="hint">${t.badge?"["+esc(t.badge)+"] ":""}${esc(t.url||"未配置链接")}</span>
+          <span class="spacer"></span>
+          <button class="btn-mini pri" onclick="event.stopPropagation();toolForm(${i})">✏️ 编辑</button>
+          <button class="btn-mini err" onclick="event.stopPropagation();removeTool(${i})">🗑 删除</button>
+        </div>
+        <div class="cat-body" style="display:none">
+          <div class="divider"></div>
+          <div class="item-sub">${esc(t.desc||"")}</div>
+        </div>
+      </div>`;
+    });
+  }
+  $("toolboxPage").innerHTML = html;
+}
+
+function toolForm(i){
+  const tools = S.admin.tools || [];
+  const t = i >= 0 ? tools[i] : { id: "", name: "", desc: "", url: "", icon: "🔧", badge: "" };
+  openDlg(`<div class="dlg-title">${i>=0?"✏️ 编辑":"＋ 新增"}云端工具</div>
+  <label>工具名称 *</label><input id="fTkName" value="${esc(t.name)}" placeholder="如 汇率换算 / 短视频去水印 / 文字识别">
+  <label>工具描述</label><textarea id="fTkDesc" style="min-height:60px" placeholder="这个工具是做什么的？会自动分类展示给本体用户">${esc(t.desc)}</textarea>
+  <label>跳转链接（点击工具后打开，可为空）</label><input id="fTkUrl" value="${esc(t.url)}" placeholder="https://...">
+  <div class="two-col">
+    <div><label>图标（emoji）</label><input id="fTkIcon" value="${esc(t.icon||"🔧")}" placeholder="🔧"></div>
+    <div><label>角标（如 热门/新）</label><input id="fTkBadge" value="${esc(t.badge||"")}" placeholder="热门"></div>
+  </div>
+  <div class="dlg-actions"><button onclick="closeDlg()">取消</button><button class="btn-pri" onclick="saveTool(${i})">? 保存</button></div>`);
+}
+
+function saveTool(i){
+  const tools = S.admin.tools || (S.admin.tools = []);
+  const t = i >= 0 ? tools[i] : { id: uid("tk") };
+  t.name = $("fTkName").value.trim();
+  t.desc = $("fTkDesc").value.trim();
+  t.url = $("fTkUrl").value.trim();
+  t.icon = $("fTkIcon").value.trim() || "🔧";
+  t.badge = $("fTkBadge").value.trim() || "";
+  if(!t.name){ toast("工具名称必填","err"); return; }
+  if(i < 0) tools.push(t);
+  closeDlg(); renderToolbox();
+  toast("云端工具已保存，点「应用」即可实时同步到本体工具箱","ok");
+  logChange("更新工具箱：「"+t.name+"」");
+}
+
+function removeTool(i){
+  const tools = S.admin.tools || [];
+  const t = tools[i]; if(!t) return;
+  confirmDlg(`确定删除云端工具「${t.name}」？删除后点「应用」，本体工具箱会实时移除该工具。`).then(ok=>{
+    if(!ok) return;
+    tools.splice(i,1); renderToolbox(); toast("已删除「"+t.name+"」，点「应用」同步到本体","ok");
+    logChange("删除工具箱「"+t.name+"」");
+  });
 }
 
 // 手机下载 APK：Android WebView 内用原生下载器；浏览器内用隐藏 iframe 触发下载（修复手机无法下载的问题）
